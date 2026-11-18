@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>PA7 Chacarita · Maqueta (android)</title>
+<style>
+  html, body { margin: 0; height: 100%; overflow: hidden; font-family: -apple-system, system-ui, "Segoe UI", Roboto, sans-serif; color: #1d1d20; background: #eeeeec; }
+  #view { position: fixed; inset: 0; }
+  #overlay { position: fixed; inset: 0; pointer-events: none; }
+  .glass { background: rgba(255,255,255,.78); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border: 1px solid rgba(255,255,255,.9);
+           box-shadow: 0 6px 24px rgba(0,0,0,.12); border-radius: 16px; }
+  header { position: absolute; top: max(12px, env(safe-area-inset-top)); left: 12px; right: 12px; padding: 10px 14px; pointer-events: auto; display: flex; align-items: center; gap: 10px; }
+  header .tag { background: #1d1d20; color: #fff; font-weight: 600; font-size: 13px; padding: 6px 8px; border-radius: 6px; }
+  header h1 { font-size: 15px; margin: 0; font-weight: 600; line-height: 1.15; }
+  header small { display: block; color: #6b6b72; font-weight: 400; font-size: 11.5px; }
+  header button { margin-left: auto; }
+  #panel { position: absolute; left: 10px; right: 10px; bottom: max(10px, env(safe-area-inset-bottom)); padding: 8px 12px 10px; pointer-events: auto; }
+  .row { display: flex; align-items: center; gap: 6px; margin: 4px 0; flex-wrap: wrap; }
+  .lab { font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: #6b6b72; font-weight: 600; width: 100%; display: flex; justify-content: space-between; }
+  .lab b { color: #1d1d20; font-weight: 600; text-transform: none; letter-spacing: 0; }
+  input[type=range] { width: 100%; accent-color: #e0457b; }
+  button { font: inherit; font-size: 12.5px; border: 1px solid #d0d0d4; background: #fff; border-radius: 9px; padding: 5px 9px; color: #1d1d20; }
+  button.on { background: #1d1d20; color: #fff; border-color: #1d1d20; }
+  button:disabled { opacity: .45; }
+  .chips label { font-size: 13px; display: flex; align-items: center; gap: 5px; background: #fff; border: 1px solid #d0d0d4; border-radius: 10px; padding: 6px 9px; }
+  #arbtn { flex: 1; background: #e0457b; color: #fff; border: 0; font-weight: 600; padding: 9px; font-size: 14px; }
+  #loading { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 6px; font-size: 14px; color: #6b6b72; }
+  body.mini #panel .full { display: none; }
+  #arbar { display: none; }
+  body.ar header, body.ar #arbtn, body.ar #toggleui { display: none; }
+  body.ar #arbar { display: flex; }
+  #arhint { font-size: 12.5px; color: #3a3a40; width: 100%; }
+</style>
+<script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/" } }</script>
+</head>
+<body data-platform="android">
+<div id="view"></div>
+<div id="overlay">
+  <div id="loading">Cargando la maqueta… <span id="loadpct"></span></div>
+  <header class="glass">
+    <span class="tag">G17</span>
+    <h1>Centro multifuncional urbano<small>PA7 · Chacarita · Zubienia, Rivera y Augeri</small></h1>
+  </header>
+  <div id="panel" class="glass">
+    <div class="row" id="arbar">
+      <div id="arhint">Apuntá a la mesa y tocá para apoyar la maqueta.</div>
+      <button id="arplace">Reubicar</button><button id="arrot">Girar</button><button id="arsize">Escala 1:500</button><button id="arexit">Salir</button>
+    </div>
+    <div class="full">
+      <div class="row"><div class="lab">Corte en planta <b id="planval">sin corte</b></div>
+        <input id="plan" type="range" min="0" max="44" step="0.5" value="44"></div>
+      <div class="row"><div class="lab">Corte vertical <b id="secname"></b></div>
+        <button data-sec="0">Ninguno</button><button data-sec="A">A-A</button><button data-sec="B">B-B</button><button data-sec="C">C-C</button><button data-sec="D">D-D</button><button id="flip">Invertir</button>
+        <input id="secoff" type="range" min="-40" max="40" step="0.5" value="0"></div>
+      <div class="row chips">
+        <label><input type="checkbox" data-layer="cubierta" checked>Cubierta</label>
+        <label><input type="checkbox" data-layer="piel" checked>Piel</label>
+        <label><input type="checkbox" data-layer="ctx" checked>Entorno</label>
+      </div>
+    </div>
+    <div class="row" style="flex-wrap:nowrap"><button id="toggleui">Controles</button><button id="arbtn">Ver en la mesa (AR)</button></div>
+    
+  </div>
+</div>
+<script type="module" src="app.js"></script>
+</body>
+</html>
