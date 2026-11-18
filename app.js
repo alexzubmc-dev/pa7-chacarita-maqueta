@@ -84,7 +84,7 @@ function setLayer(name, vis) { layers[name].forEach((o) => (o.visible = vis)); }
 
 // ---------- carga ----------
 const loader = new GLTFLoader();
-loader.load('maqueta.glb', (g) => {
+loader.load('maqueta.glb?v=3', (g) => {
   g.scene.traverse((o) => {
     if (!o.isMesh) return;
     const ly = (o.name || '').split('__')[0];
