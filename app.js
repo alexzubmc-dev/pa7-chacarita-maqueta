@@ -117,6 +117,23 @@ addEventListener('resize', () => {
   renderer.setSize(innerWidth, innerHeight);
 });
 
+// ---------- modo camara (todos los celulares): la maqueta sobre la imagen de la camara ----------
+let camStream = null;
+$('cambtn').addEventListener('click', async () => {
+  try {
+    camStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: 'environment' } }, audio: false });
+  } catch (err) { alert('No se pudo abrir la cámara. Revisá los permisos del navegador.'); return; }
+  const v = $('camvideo'); v.srcObject = camStream; await v.play().catch(() => {});
+  document.body.classList.add('cam');
+  scene.background = null; renderer.setClearColor(0x000000, 0);
+  const far = innerWidth < innerHeight ? 2.6 : 1.4;
+  camera.position.set(-150 * far, 150 * far, 210 * far); controls.target.set(0, 0, 25); controls.update();
+});
+$('camexit').addEventListener('click', () => {
+  camStream?.getTracks().forEach((t) => t.stop()); camStream = null;
+  document.body.classList.remove('cam'); scene.background = bg;
+});
+
 // ---------- AR Android (WebXR) ----------
 let hitSource = null, placed = false, reticle = null, arRot = 0;
 if (PLATFORM === 'android') {
@@ -126,10 +143,18 @@ if (PLATFORM === 'android') {
   const btn = $('arbtn');
   if (navigator.xr) {
     navigator.xr.isSessionSupported('immersive-ar').then((ok) => {
-      if (!ok) { btn.textContent = 'AR no disponible en este celular'; btn.disabled = true; }
+      if (!ok) sceneViewer(btn);
     });
-  } else { btn.textContent = 'AR no disponible en este navegador'; btn.disabled = true; }
+  } else sceneViewer(btn);
+  function sceneViewer(b) {   // sin WebXR: AR nativo de Google (sin cortes)
+    b.dataset.sv = '1'; b.textContent = 'Ver en la mesa (AR de Google)';
+  }
   btn.addEventListener('click', async () => {
+    if (btn.dataset.sv) {
+      const glb = new URL('maqueta_ar.glb', location.href).href;
+      location.href = 'intent://arvr.google.com/scene-viewer/1.2?file=' + encodeURIComponent(glb) + '&mode=ar_preferred&title=PA7%20Chacarita#Intent;scheme=https;package=com.google.android.googlequicksearchbox;action=android.intent.action.VIEW;S.browser_fallback_url=' + encodeURIComponent(location.href) + ';end;';
+      return;
+    }
     const session = await navigator.xr.requestSession('immersive-ar', {
       requiredFeatures: ['hit-test'], optionalFeatures: ['dom-overlay', 'local-floor'], domOverlay: { root: $('overlay') },
     });

@@ -7,6 +7,13 @@
 <style>
   html, body { margin: 0; height: 100%; overflow: hidden; font-family: -apple-system, system-ui, "Segoe UI", Roboto, sans-serif; color: #1d1d20; background: #eeeeec; }
   #view { position: fixed; inset: 0; }
+  #camvideo { position: fixed; inset: 0; width: 100%; height: 100%; object-fit: cover; display: none; }
+  body.cam #camvideo { display: block; }
+  body.cam { background: #000; }
+  #camexit { display: none; }
+  body.cam #camexit { display: inline-block; }
+  body.cam #cambtn, body.cam #arbtn { display: none; }
+  #cambtn { background: #1d1d20; color: #fff; border: 0; font-weight: 600; padding: 9px 12px; font-size: 14px; }
   #overlay { position: fixed; inset: 0; pointer-events: none; }
   .glass { background: rgba(255,255,255,.78); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border: 1px solid rgba(255,255,255,.9);
            box-shadow: 0 6px 24px rgba(0,0,0,.12); border-radius: 16px; }
@@ -36,6 +43,7 @@
   "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/" } }</script>
 </head>
 <body data-platform="ios">
+<video id="camvideo" playsinline muted autoplay></video>
 <div id="view"></div>
 <div id="overlay">
   <div id="loading">Cargando la maqueta… <span id="loadpct"></span></div>
@@ -60,8 +68,8 @@
         <label><input type="checkbox" data-layer="ctx" checked>Entorno</label>
       </div>
     </div>
-    <div class="row" style="flex-wrap:nowrap"><button id="toggleui">Controles</button><button id="arbtn">Ver en la mesa (AR)</button></div>
-    <div style="font-size:11px;color:#6b6b72;margin-top:4px">En iPhone la vista en la mesa muestra la maqueta entera (sin cortes); los cortes se usan en esta pantalla.</div><a id="qlink" rel="ar" style="display:none"><img alt=""></a>
+    <div class="row" style="flex-wrap:nowrap"><button id="toggleui">Controles</button><button id="cambtn">Cámara</button><button id="arbtn">Ver en la mesa (AR)</button><button id="camexit">Salir de la cámara</button></div>
+    <div style="font-size:11px;color:#6b6b72;margin-top:4px">«Cámara»: la maqueta sobre lo que ve tu celular, con cortes. «En la mesa»: AR de Apple, la maqueta entera sin cortes.</div><a id="qlink" rel="ar" style="display:none"><img alt=""></a>
   </div>
 </div>
 <script type="module" src="app.js"></script>
